@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background GIF without a white filter -->
+    <ImageView
+        android:id="@+id/bgGif"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/clothing_bg"/>
+
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/rounded_bg"
+            android:padding="16dp"
+            android:elevation="5dp">
+
+            <!-- Logo and Brand Name -->
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo"
+                android:contentDescription="D2Clothings Logo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="D2CLOTHINGS"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#1a1a1a"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fashion For Everyone"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Login Form -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginTop="24dp"
+                android:elevation="5dp"
+                android:background="@drawable/rounded_bg">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxStrokeColor="#ffa500"
+                    app:hintTextColor="#ffa500"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:boxStrokeColor="#ffa500"
+                    app:hintTextColor="#ffa500"
+                    app:endIconMode="password_toggle"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign In"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="8dp"
+                    android:backgroundTint="#ffa500"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="New to D2Clothings? Create Account"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:textColor="#ffa500"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="RoundedTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="android:textColorHint">#BDBDBD</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="RoundedButton" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">12dp</item>
+        <item name="backgroundTint">#FFA500</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="RoundedTextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">#FFA500</item>
+    </style>
+
+</resources>

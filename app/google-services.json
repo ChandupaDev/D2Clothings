@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313336201825",
+    "project_id": "d2clothings-fdb2e",
+    "storage_bucket": "d2clothings-fdb2e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313336201825:android:307b8cad700306ebf5e020",
+        "android_client_info": {
+          "package_name": "com.example.d2clothings"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1yoUVjC5qzlZrTAFjTD4G3jTSseIVB8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

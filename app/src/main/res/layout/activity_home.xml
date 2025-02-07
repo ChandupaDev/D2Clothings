@@ -1,0 +1,37 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Welcome Message -->
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome, User!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingBottom="12dp"/>
+
+    <!-- Product List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="8dp"/>
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_margin="16dp"/>
+
+
+</LinearLayout>

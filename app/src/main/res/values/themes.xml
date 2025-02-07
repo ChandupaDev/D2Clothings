@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Light Theme -->
+    <style name="Theme.MCommerce" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#ffa500</item>
+        <item name="colorPrimaryVariant">#ff8c00</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#1a1a1a</item>
+        <item name="colorBackground">#f9f9f9</item>
+        <item name="colorSurface">#ffffff</item>
+        <item name="android:statusBarColor">#ff8c00</item>
+        <item name="android:windowBackground">?attr/colorBackground</item>
+        <item name="android:navigationBarColor">#ffffff</item>
+        <item name="android:textColorPrimary">#1a1a1a</item>
+        <item name="android:textColorSecondary">#666666</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+    </style>
+
+    <!-- Dark Theme -->
+    <style name="Theme.MCommerce.Dark" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#ffa500</item>
+        <item name="colorPrimaryVariant">#ff8c00</item>
+        <item name="colorOnPrimary">#1a1a1a</item>
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorBackground">#121212</item>
+        <item name="colorSurface">#1e1e1e</item>
+        <item name="android:statusBarColor">#ff8c00</item>
+        <item name="android:windowBackground">?attr/colorBackground</item>
+        <item name="android:navigationBarColor">#1e1e1e</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="android:textColorSecondary">#cccccc</item>
+        <item name="android:fontFamily">@font/poppins_regular</item>
+    </style>
+</resources>
