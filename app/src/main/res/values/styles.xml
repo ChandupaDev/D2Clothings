@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">#ffa500</item>
-        <item name="colorPrimaryDark">#f09000</item>
-        <item name="colorAccent">#ffa500</item>
+    <style name="Theme.D2Clothings" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#FFA500</item> <!-- Orange -->
+        <item name="colorPrimaryVariant">#FF8C00</item> <!-- Darker Orange -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White text on toolbar -->
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar">false</item> <!-- Ensures icons stay white -->
     </style>
-
 </resources>
