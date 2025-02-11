@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#FF8C00"
             app:title="D2Clothings"
             app:titleTextColor="@android:color/white"
             android:elevation="4dp" />
@@ -59,7 +59,7 @@
                 android:layout_gravity="center"
                 android:padding="12dp"
                 android:textSize="16sp"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="?attr/colorPrimary"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="12dp" />
         </LinearLayout>

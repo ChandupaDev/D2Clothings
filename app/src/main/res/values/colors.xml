@@ -5,5 +5,9 @@
     <color name="colorPrimary">#FFA500</color>
     <color name="colorPrimaryVariant">#FF8C00</color>
     <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="gray">#B0B0B0</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="orange">#FF8C00</color>
+
 
 </resources>

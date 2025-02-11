@@ -1,10 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:background="@color/black">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/user"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background"
+        android:padding="5dp" />
+
+    <!-- Email (Non-editable) -->
+    <TextView
+        android:id="@+id/emailText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="email@example.com"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textStyle="bold" />
+
+    <!-- Profile Details -->
+    <EditText
+        android:id="@+id/fullName"
+        style="@style/ProfileEditText"
+        android:hint="Full Name" />
+
+    <EditText
+        android:id="@+id/phone"
+        style="@style/ProfileEditText"
+        android:hint="Phone Number"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/address"
+        style="@style/ProfileEditText"
+        android:hint="Address" />
+
+    <EditText
+        android:id="@+id/city"
+        style="@style/ProfileEditText"
+        android:hint="City" />
+
+    <!-- Edit Profile Button -->
+    <Button
+        android:id="@+id/editProfileBtn"
+        style="@style/PrimaryButton"
+        android:text="Edit Profile" />
+
+</LinearLayout>
