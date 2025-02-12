@@ -9,5 +9,8 @@
     <color name="teal_200">#03DAC5</color>
     <color name="orange">#FF8C00</color>
 
+    <color name="backgroundLight">#F5F5F5</color>
+    <color name="primary">#007AFF</color> <!-- iOS-like blue -->
+    <color name="secondary">#757575</color> <!-- Soft gray -->
 
 </resources>

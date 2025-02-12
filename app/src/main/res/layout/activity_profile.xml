@@ -1,60 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:orientation="vertical"
-    android:background="@color/black">
+    android:background="@color/backgroundLight"
+    android:padding="24dp">
 
-    <!-- Profile Image -->
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/user"
-        android:scaleType="centerCrop"
-        android:background="@drawable/circle_background"
-        android:padding="5dp" />
-
-    <!-- Email (Non-editable) -->
-    <TextView
-        android:id="@+id/emailText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="email@example.com"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:background="@color/backgroundLight"
+        android:padding="16dp">
 
-    <!-- Profile Details -->
-    <EditText
-        android:id="@+id/fullName"
-        style="@style/ProfileEditText"
-        android:hint="Full Name" />
+        <!-- Profile Image -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/user"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"
+            android:padding="8dp"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"/>
 
-    <EditText
-        android:id="@+id/phone"
-        style="@style/ProfileEditText"
-        android:hint="Phone Number"
-        android:inputType="phone" />
+        <!-- Email (Non-editable) -->
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="email@example.com"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/address"
-        style="@style/ProfileEditText"
-        android:hint="Address" />
+        <!-- Upload Profile Picture -->
+        <Button
+            android:id="@+id/uploadImageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Image"
+            android:textColor="@color/colorOnPrimary"
+            android:background="@null"
+            android:paddingTop="8dp"
+            android:layout_gravity="center"/>
 
-    <EditText
-        android:id="@+id/city"
-        style="@style/ProfileEditText"
-        android:hint="City" />
+        <!-- Editable Profile Details -->
+        <EditText
+            android:id="@+id/fullName"
+            style="@style/ProfileEditText"
+            android:hint="Full Name"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"/>
 
-    <!-- Edit Profile Button -->
-    <Button
-        android:id="@+id/editProfileBtn"
-        style="@style/PrimaryButton"
-        android:text="Edit Profile" />
+        <EditText
+            android:id="@+id/phone"
+            style="@style/ProfileEditText"
+            android:hint="Phone"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"/>
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/address"
+            style="@style/ProfileEditText"
+            android:hint="Address"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"/>
+
+        <EditText
+            android:id="@+id/city"
+            style="@style/ProfileEditText"
+            android:hint="City"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:background="@drawable/edit_text_background"
+            android:padding="12dp"/>
+
+        <!-- Save Changes Button -->
+        <Button
+            android:id="@+id/editProfileBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Click To Edit Profile"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button"
+            android:elevation="4dp"
+            android:padding="12dp"
+            android:layout_margin="20dp"/>
+
+    </LinearLayout>
+</ScrollView>
