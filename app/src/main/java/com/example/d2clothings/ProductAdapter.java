@@ -1,5 +1,6 @@
 package com.example.d2clothings;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.productList = productList;
     }
 
-    public void updateList(List<Product> newList) {
-        productList = newList;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,29 +31,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.tvName.setText(product.getName());
-        holder.tvPrice.setText("Rs " + product.getPrice());
-
-        // Load product image using Glide
-        Glide.with(holder.itemView.getContext())
-                .load(product.getImageUrl())
-                .into(holder.ivProduct);
+        holder.tvTitle.setText(product.getTitle()); // Changed from getName() to getTitle()
+        holder.tvPrice.setText("Rs. " + product.getPrice());
+        Glide.with(holder.itemView.getContext()).load(product.getImageUrl()).into(holder.ivProduct); // Changed from getImageUrl() to getUrl()
     }
+
 
     @Override
     public int getItemCount() {
+        Log.d("ProductAdapter", "Adapter Item Count: " + productList.size());
         return productList.size();
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        TextView tvTitle, tvPrice;
         ImageView ivProduct;
-        TextView tvName, tvPrice;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivProduct = itemView.findViewById(R.id.ivProduct);
-            tvName = itemView.findViewById(R.id.tvName);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
             tvPrice = itemView.findViewById(R.id.tvPrice);
+            ivProduct = itemView.findViewById(R.id.ivProduct);
         }
     }
 }

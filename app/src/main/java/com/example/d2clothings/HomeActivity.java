@@ -20,6 +20,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.d2clothings.db.SQLiteHelper;
+import com.example.d2clothings.util.FirestoreHelper;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -34,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
     private List<Product> productList;
-    private Button btnLogout;
+    private Button btnLogout, btnRefresh;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -51,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         tvWelcome = findViewById(R.id.tvWelcome);
         recyclerView = findViewById(R.id.recyclerView);
         btnLogout = findViewById(R.id.btnLogout);
+        btnRefresh = findViewById(R.id.btnRefresh); // New Refresh Button
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
@@ -75,6 +78,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // Logout Button Click
         btnLogout.setOnClickListener(v -> logout());
+
+        // Refresh Button Click
+        btnRefresh.setOnClickListener(v -> loadProducts());
     }
 
     // 🔹 Set up the Navigation Drawer
@@ -95,9 +101,6 @@ public class HomeActivity extends AppCompatActivity {
                 if (id == R.id.nav_home) {
                     Toast.makeText(HomeActivity.this, "Already on Home", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_profile) {
-                    // 🔹 Debugging Log
-                    Log.d("NavigationDrawer", "Opening ProfileActivity...");
-
                     Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_cart) {
@@ -140,21 +143,30 @@ public class HomeActivity extends AppCompatActivity {
                 );
     }
 
-    // 🔹 Load Products from Firestore
+    // 🔹 Load Products from SQLite & Firestore
     private void loadProducts() {
-        db.collection("products")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    productList.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Product product = doc.toObject(Product.class);
-                        productList.add(product);
-                    }
-                    productAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to load products: " + e.getMessage(), Toast.LENGTH_LONG).show()
-                );
+        if (productList == null) {
+            productList = new ArrayList<>();
+        }
+        productList.clear();
+
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.fetchProducts(fetchedProducts -> {
+            productList.addAll(fetchedProducts);
+            runOnUiThread(() -> {
+                Log.d("HomeActivity", "Products loaded: " + productList.size());
+                productAdapter.notifyDataSetChanged();
+            });
+        });
+    }
+
+
+
+    // 🔹 Refresh Products when Activity Resumes
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadProducts(); // Refresh products when returning to this activity
     }
 
     // 🔹 Logout User
