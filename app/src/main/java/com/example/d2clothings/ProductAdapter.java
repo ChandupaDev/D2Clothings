@@ -1,5 +1,7 @@
 package com.example.d2clothings;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.d2clothings.fragments.ProductDetailsFragment;
 
 import java.util.List;
 
@@ -31,9 +36,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.tvTitle.setText(product.getTitle()); // Changed from getName() to getTitle()
+
+        // Set product title and price
+        holder.tvTitle.setText(product.getName());
         holder.tvPrice.setText("Rs. " + product.getPrice());
-        Glide.with(holder.itemView.getContext()).load(product.getImageUrl()).into(holder.ivProduct); // Changed from getImageUrl() to getUrl()
+
+        // Load product image with Glide
+        Glide.with(holder.itemView.getContext())
+                .load(product.getImageUrl())
+                .placeholder(R.drawable.profile_placeholder)
+                .into(holder.ivProduct);
+
+        // Handle item click to open ProductDetailsActivity
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
+            intent.putExtra("id", product.getId());
+            intent.putExtra("title", product.getName());
+            intent.putExtra("price", "Rs. " + product.getPrice());
+            intent.putExtra("imageUrl", product.getImageUrl());
+            intent.putExtra("description", product.getDescription());
+            v.getContext().startActivity(intent);
+        });
     }
 
 

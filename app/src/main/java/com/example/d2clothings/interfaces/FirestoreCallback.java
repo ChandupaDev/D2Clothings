@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface FirestoreCallback {
     void onSuccess(List<Product> productList);
+    void onFailure(Exception e);
 }

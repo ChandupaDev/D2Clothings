@@ -21,27 +21,45 @@ public class FirestoreHelper {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Product> productList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Log.d("FirestoreHelper", "Fetched Document: " + doc.getData()); // Debugging Log
+                        Log.d("FirestoreHelper", "Fetched Document: " + doc.getData());
+
                         try {
-                            Object priceObj = doc.get("price");
-                            Long price = null;
-                            if (priceObj instanceof Long) {
-                                price = (Long) priceObj;
-                            } else if (priceObj instanceof Double) {
-                                price = ((Double) priceObj).longValue();
+                            // Fetch data safely
+                            String title = doc.getString("name") != null ? doc.getString("name") : "No Title";
+                            String description = doc.getString("description") != null ? doc.getString("description") : "No Description";
+                            String imageUrl = doc.getString("imageUrl") != null ? doc.getString("imageUrl") : "";
+
+                            // Fetch price safely
+                            Long priceLong = doc.getLong("price");
+                            Long price = (priceLong != null) ? priceLong : 0L;
+
+                            // **Declare qty before using**
+                            int qty = 0; // Default value
+                            if (doc.contains("qty")) {
+                                Long qtyLong = doc.getLong("qty");
+                                qty = (qtyLong != null) ? qtyLong.intValue() : 0;
+                            } else {
+                                Log.e("FirestoreHelper", "Field 'qty' not found in Firestore document: " + doc.getId());
                             }
 
+
+                            // Debugging Logs
+                            Log.d("FirestoreHelper", "Title: " + title);
+                            Log.d("FirestoreHelper", "Price: " + price);
+                            Log.d("FirestoreHelper", "Quantity: " + qty);
+
+                            // **Pass qty to Product**
                             Product product = new Product(
-                                    doc.getString("id"),
-                                    doc.getString("title"),
-                                    doc.getString("description"),
+                                    doc.getId(),
+                                    title,
+                                    description,
                                     price,
-                                    doc.getString("qty"),
-                                    doc.getString("imageUrl")
+                                    qty, // ✅ Now qty is defined
+                                    imageUrl
                             );
                             productList.add(product);
                         } catch (Exception e) {
-                            Log.e("FirestoreHelper", "Error parsing product: " + e.getMessage());
+                            Log.e("FirestoreHelper", "Error parsing product", e);
                         }
                     }
                     Log.d("FirestoreHelper", "Total Products Fetched: " + productList.size());

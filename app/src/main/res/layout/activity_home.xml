@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_weight="1">
 
             <!-- Welcome Message -->
             <TextView
@@ -50,33 +51,45 @@
                 android:layout_weight="1"
                 android:paddingBottom="8dp" />
 
-            <!-- Logout Button -->
-            <Button
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
+            <!-- Buttons Layout -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Logout"
-                android:layout_gravity="center"
-                android:padding="12dp"
-                android:textSize="16sp"
-                android:backgroundTint="?attr/colorPrimary"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="12dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="16dp">
 
-            <Button
-                android:id="@+id/btnRefresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Refresh"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center" />
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Logout"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnRefresh"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Refresh"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
     <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"

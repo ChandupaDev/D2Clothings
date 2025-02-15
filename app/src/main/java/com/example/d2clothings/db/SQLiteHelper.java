@@ -21,10 +21,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE products (\n" +
                 "    id           TEXT PRIMARY KEY,\n" +
-                "    title        TEXT NOT NULL,\n" +
+                "    name         TEXT NOT NULL,\n" + // Changed from 'title' to 'name'
                 "    description  TEXT NOT NULL,\n" +
-                "    price        INTEGER NOT NULL,\n" + // Changed from TEXT to INTEGER
-                "    qty          TEXT NOT NULL,\n" +
+                "    price        INTEGER NOT NULL,\n" +
+                "    qty          INTEGER NOT NULL,\n" + // Changed from TEXT to INTEGER
                 "    url          TEXT NOT NULL\n" +
                 ");");
     }
@@ -39,10 +39,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("id", product.getId());
-        values.put("title", product.getTitle());
+        values.put("name", product.getName()); // Changed from title to name
         values.put("description", product.getDescription());
         values.put("price", product.getPrice()); // Stored as INTEGER
-        values.put("qty", product.getQty());
+        values.put("qty", product.getQty()); // Stored as INTEGER
         values.put("url", product.getImageUrl());
 
         db.insert("products", null, values);
@@ -58,10 +58,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             do {
                 Product product = new Product(
                         cursor.getString(0),  // id
-                        cursor.getString(1),  // title
+                        cursor.getString(1),  // name
                         cursor.getString(2),  // description
-                        cursor.getLong(3),    // price (now correctly retrieved as Long)
-                        cursor.getString(4),  // qty
+                        cursor.getLong(3),    // price (Long)
+                        cursor.getInt(4),     // qty (changed from getString to getInt)
                         cursor.getString(5)   // url
                 );
                 products.add(product);
