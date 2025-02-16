@@ -36,17 +36,6 @@
             android:paddingTop="10dp"
             android:textStyle="bold" />
 
-        <!-- Upload Profile Picture -->
-        <Button
-            android:id="@+id/uploadImageBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upload Image"
-            android:textColor="@color/colorOnPrimary"
-            android:background="@null"
-            android:paddingTop="8dp"
-            android:layout_gravity="center"/>
-
         <!-- Editable Profile Details -->
         <EditText
             android:id="@+id/fullName"

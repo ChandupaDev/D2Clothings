@@ -10,12 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.d2clothings.fragments.ProductDetailsFragment;
 
 import java.util.List;
 
@@ -37,19 +34,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-        Log.d("ProductAdapter", "Binding Product: " + product.getName() + " | Qty: " + product.getQty());  // Debugging
+        // Debugging Logs
+        Log.d("ProductAdapter", "Binding Product: " + product.getName() + " | Qty: " + product.getQty());
 
-        // Set product title and price
+        // Set product details
         holder.tvTitle.setText(product.getName());
         holder.tvPrice.setText("Rs. " + product.getPrice());
 
-        // Load product image with Glide
+        // Fix the quantity setting to avoid crashes
+        if (holder.tvQuantity != null) {
+            holder.tvQuantity.setText("Qty: " + product.getQty());
+        } else {
+            Log.e("ProductAdapter", "tvQuantity is null! Check item_product.xml");
+        }
+
+        // Load product image
         Glide.with(holder.itemView.getContext())
                 .load(product.getImageUrl())
                 .placeholder(R.drawable.profile_placeholder)
                 .into(holder.ivProduct);
 
-        // Handle item click to open ProductDetailsActivity
+        // Handle click event
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
             intent.putExtra("id", product.getId());
@@ -59,7 +64,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             intent.putExtra("description", product.getDescription());
             intent.putExtra("quantity", String.valueOf(product.getQty()));
 
-            Log.d("ProductAdapter", "Sending qty: " + product.getQty());  // Debugging
+            Log.d("ProductAdapter", "Sending qty: " + product.getQty());
             v.getContext().startActivity(intent);
         });
     }
@@ -79,7 +84,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvPrice = itemView.findViewById(R.id.tvPrice);
-            tvQuantity = itemView.findViewById(R.id.tvQuantity);
+            tvQuantity = itemView.findViewById(R.id.tvQuantity); // Ensure this exists in XML
             ivProduct = itemView.findViewById(R.id.ivProduct);
         }
     }

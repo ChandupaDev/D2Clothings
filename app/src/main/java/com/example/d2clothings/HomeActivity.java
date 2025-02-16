@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +32,6 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvWelcome;
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-    private Button btnLogout, btnRefresh;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
@@ -49,8 +46,6 @@ public class HomeActivity extends AppCompatActivity {
         // Initialize Views
         tvWelcome = findViewById(R.id.tvWelcome);
         recyclerView = findViewById(R.id.recyclerView);
-        btnLogout = findViewById(R.id.btnLogout);
-        btnRefresh = findViewById(R.id.btnRefresh);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
@@ -70,10 +65,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load Products from Firestore
         fetchProducts();
-
-        // Button Listeners
-        btnLogout.setOnClickListener(v -> logout());
-        btnRefresh.setOnClickListener(v -> fetchProducts());
     }
 
     private void setupNavigationDrawer() {
@@ -89,9 +80,7 @@ public class HomeActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             try {
-                if (id == R.id.nav_home) {
-                    Toast.makeText(HomeActivity.this, "Already on Home", Toast.LENGTH_SHORT).show();
-                } else if (id == R.id.nav_profile) {
+                if (id == R.id.nav_profile) {
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 } else if (id == R.id.nav_cart) {
                     startActivity(new Intent(HomeActivity.this, CartActivity.class));
@@ -151,7 +140,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        fetchProducts();
+        fetchProducts(); // Auto-refresh products when activity resumes
     }
 
     private void logout() {
@@ -160,14 +149,11 @@ public class HomeActivity extends AppCompatActivity {
         editor.remove("userEmail");
         editor.apply();
 
-        // Debugging Log
-        String checkEmail = sharedPreferences.getString("userEmail", "No email found");
-        Log.d("Logout", "User email after logout: " + checkEmail);
+        Log.d("Logout", "User email after logout: " + sharedPreferences.getString("userEmail", "No email found"));
 
         Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
         redirectToSignIn();
     }
-
 
     private void redirectToSignIn() {
         Intent intent = new Intent(HomeActivity.this, SigninActivity.class);
