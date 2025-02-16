@@ -5,7 +5,8 @@ public class Product {
     private String name;
     private String description;
     private Long price;  // Change from int to Long
-    private int qty;
+    private int qty; // Store as int, not Long or Double
+    ;
     private String imageUrl;
 
     // Constructor

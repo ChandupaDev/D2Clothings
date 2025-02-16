@@ -35,12 +35,22 @@ public class FirestoreHelper {
 
                             // **Declare qty before using**
                             int qty = 0; // Default value
+
                             if (doc.contains("qty")) {
-                                Long qtyLong = doc.getLong("qty");
-                                qty = (qtyLong != null) ? qtyLong.intValue() : 0;
+                                Object qtyObj = doc.get("qty"); // Get raw Firestore object
+
+                                if (qtyObj instanceof Long) {
+                                    qty = ((Long) qtyObj).intValue(); // Convert Long to int
+                                } else if (qtyObj instanceof Double) {
+                                    qty = ((Double) qtyObj).intValue(); // Convert Double to int (if Firestore stored it as Double)
+                                } else {
+                                    qty = 0; // Default value if it's missing
+                                }
                             } else {
                                 Log.e("FirestoreHelper", "Field 'qty' not found in Firestore document: " + doc.getId());
                             }
+
+
 
 
                             // Debugging Logs
