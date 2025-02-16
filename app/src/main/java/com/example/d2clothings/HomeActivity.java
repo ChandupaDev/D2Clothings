@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,11 +18,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.d2clothings.interfaces.FirestoreCallback;
+import com.example.d2clothings.util.FirestoreHelper;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -33,9 +32,6 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvWelcome;
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-    private List<Product> productList;
-    private Button btnLogout;
-
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
@@ -50,7 +46,6 @@ public class HomeActivity extends AppCompatActivity {
         // Initialize Views
         tvWelcome = findViewById(R.id.tvWelcome);
         recyclerView = findViewById(R.id.recyclerView);
-        btnLogout = findViewById(R.id.btnLogout);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
@@ -59,9 +54,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        productList = new ArrayList<>();
-        productAdapter = new ProductAdapter(productList);
-        recyclerView.setAdapter(productAdapter);
 
         // Load User Data
         String userEmail = getUserEmail();
@@ -69,15 +61,12 @@ public class HomeActivity extends AppCompatActivity {
             redirectToSignIn();
             return;
         }
-
         loadUserData(userEmail);
-        loadProducts();
 
-        // Logout Button Click
-        btnLogout.setOnClickListener(v -> logout());
+        // Load Products from Firestore
+        fetchProducts();
     }
 
-    // 🔹 Set up the Navigation Drawer
     private void setupNavigationDrawer() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,21 +77,13 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Handle Navigation Clicks
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             try {
-                if (id == R.id.nav_home) {
-                    Toast.makeText(HomeActivity.this, "Already on Home", Toast.LENGTH_SHORT).show();
-                } else if (id == R.id.nav_profile) {
-                    // 🔹 Debugging Log
-                    Log.d("NavigationDrawer", "Opening ProfileActivity...");
-
-                    Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                    startActivity(intent);
+                if (id == R.id.nav_profile) {
+                    startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 } else if (id == R.id.nav_cart) {
-                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(HomeActivity.this, CartActivity.class));
                 } else if (id == R.id.nav_logout) {
                     logout();
                 }
@@ -116,13 +97,11 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // 🔹 Get Stored Email from SharedPreferences
     private String getUserEmail() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         return sharedPreferences.getString("userEmail", null);
     }
 
-    // 🔹 Load User Data from Firestore
     private void loadUserData(String userEmail) {
         db.collection("users")
                 .whereEqualTo("email", userEmail)
@@ -131,7 +110,7 @@ public class HomeActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String fullName = document.getString("fullName");
                         tvWelcome.setText("Welcome, " + fullName + "!");
-                        return; // Stop loop after first match
+                        return;
                     }
                     Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
                 })
@@ -140,35 +119,42 @@ public class HomeActivity extends AppCompatActivity {
                 );
     }
 
-    // 🔹 Load Products from Firestore
-    private void loadProducts() {
-        db.collection("products")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    productList.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Product product = doc.toObject(Product.class);
-                        productList.add(product);
-                    }
-                    productAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to load products: " + e.getMessage(), Toast.LENGTH_LONG).show()
-                );
+    private void fetchProducts() {
+        new FirestoreHelper().fetchProducts(new FirestoreCallback() {
+            @Override
+            public void onSuccess(List<Product> productList) {
+                runOnUiThread(() -> {
+                    productAdapter = new ProductAdapter(productList);
+                    recyclerView.setAdapter(productAdapter);
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("HomeActivity", "Error fetching products", e);
+                Toast.makeText(HomeActivity.this, "Failed to load products", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // 🔹 Logout User
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchProducts(); // Auto-refresh products when activity resumes
+    }
+
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("userEmail"); // Remove user data
+        editor.remove("userEmail");
         editor.apply();
+
+        Log.d("Logout", "User email after logout: " + sharedPreferences.getString("userEmail", "No email found"));
 
         Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
         redirectToSignIn();
     }
 
-    // 🔹 Redirect to Sign-in Screen
     private void redirectToSignIn() {
         Intent intent = new Intent(HomeActivity.this, SigninActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -176,7 +162,6 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
-    // 🔹 Close Drawer on Back Press
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {

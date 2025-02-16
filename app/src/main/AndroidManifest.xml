@@ -45,6 +45,9 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="true" />
+        <activity android:name=".ProductDetailActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>
