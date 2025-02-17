@@ -1,7 +1,6 @@
 package com.example.d2clothings;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private List<Product> productList;
+    private List<Product> filteredList; // For search functionality
 
     public ProductAdapter(List<Product> productList) {
         this.productList = productList;
+        this.filteredList = new ArrayList<>(productList); // Create a copy for filtering
     }
 
     @NonNull
@@ -32,7 +34,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        Product product = productList.get(position);
+        Product product = filteredList.get(position);
 
         // Debugging Logs
         Log.d("ProductAdapter", "Binding Product: " + product.getName() + " | Qty: " + product.getQty());
@@ -41,20 +43,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvTitle.setText(product.getName());
         holder.tvPrice.setText("Rs. " + product.getPrice());
 
-        // Fix the quantity setting to avoid crashes
+        // Avoid crashes if tvQuantity is null
         if (holder.tvQuantity != null) {
             holder.tvQuantity.setText("Qty: " + product.getQty());
         } else {
             Log.e("ProductAdapter", "tvQuantity is null! Check item_product.xml");
         }
 
-        // Load product image
+        // Load product image efficiently
         Glide.with(holder.itemView.getContext())
                 .load(product.getImageUrl())
                 .placeholder(R.drawable.profile_placeholder)
                 .into(holder.ivProduct);
 
-        // Handle click event
+        // Handle click event to open Product Detail
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
             intent.putExtra("id", product.getId());
@@ -69,13 +71,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         });
     }
 
-
     @Override
     public int getItemCount() {
-        Log.d("ProductAdapter", "Adapter Item Count: " + productList.size());
-        return productList.size();
+        return filteredList.size();
     }
 
+    // ViewHolder class
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvPrice, tvQuantity;
         ImageView ivProduct;
@@ -87,5 +88,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvQuantity = itemView.findViewById(R.id.tvQuantity); // Ensure this exists in XML
             ivProduct = itemView.findViewById(R.id.ivProduct);
         }
+    }
+
+    // Filtering method for search functionality
+    public void filter(String query) {
+        filteredList.clear();
+        if (query.isEmpty()) {
+            filteredList.addAll(productList);
+        } else {
+            for (Product product : productList) {
+                if (product.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(product);
+                }
+            }
+        }
+        notifyDataSetChanged(); // Refresh the adapter
     }
 }

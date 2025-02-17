@@ -10,15 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.d2clothings.R;
-
 import java.util.List;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
-    private List<Integer> imageList; // Example: List of image resources
+    private Context context;
+    private List<Integer> bannerImages;  // Correct variable name
 
-    public BannerAdapter(List<Integer> imageList) {
-        this.imageList = imageList;
+    public BannerAdapter(Context context, List<Integer> bannerImages) {
+        this.context = context;
+        this.bannerImages = bannerImages;
     }
 
     @NonNull
@@ -30,12 +30,13 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
 
     @Override
     public void onBindViewHolder(@NonNull BannerViewHolder holder, int position) {
-        holder.bannerImageView.setImageResource(imageList.get(position));
+        // Use Glide for better image handling
+        Glide.with(context).load(bannerImages.get(position)).into(holder.bannerImageView);
     }
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return bannerImages.size(); // Corrected the reference
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {
@@ -53,5 +54,3 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
         }
     }
 }
-
-
