@@ -43,6 +43,31 @@
                 android:textColor="@android:color/black"
                 android:paddingBottom="12dp" />
 
+            <!-- Banner Carousel -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/bannerViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:clipToPadding="false"
+                android:padding="10dp" />
+
+            <!-- Latest Products Section -->
+            <TextView
+                android:id="@+id/latestProductsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Latest Products"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:padding="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/latestProductsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:nestedScrollingEnabled="false" />
+
             <!-- Product List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"

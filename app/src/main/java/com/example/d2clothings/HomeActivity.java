@@ -17,6 +17,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.d2clothings.interfaces.FirestoreCallback;
 import com.example.d2clothings.util.FirestoreHelper;
@@ -24,6 +25,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -48,6 +50,21 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+
+
+        ViewPager2 bannerViewPager = findViewById(R.id.bannerViewPager);
+        List<Integer> images = Arrays.asList(R.drawable.banner, R.drawable.banner, R.drawable.banner);
+
+        BannerAdapter adapter = new BannerAdapter(images);
+        bannerViewPager.setAdapter(adapter);
+
+
+        List<String> bannerUrls = Arrays.asList(
+                "https://example.com/banner1.jpg",
+                "https://example.com/banner2.jpg",
+                "https://example.com/banner3.jpg"
+        );
+
 
         // Setup Toolbar & Drawer
         setupNavigationDrawer();
