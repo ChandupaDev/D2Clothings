@@ -52,10 +52,11 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize Views
         tvWelcome = findViewById(R.id.tvWelcome);
-        recyclerView = findViewById(R.id.recyclerView);
         searchBar = findViewById(R.id.search_bar);
+        recyclerView = findViewById(R.id.latestProductsRecyclerView);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+
 
         ImageButton btnDrawer = findViewById(R.id.btnDrawer);
         ImageButton btnNotification = findViewById(R.id.btnNotification);
@@ -65,6 +66,9 @@ public class HomeActivity extends AppCompatActivity {
         btnNotification.setOnClickListener(v ->
                 Toast.makeText(HomeActivity.this, "Notifications clicked!", Toast.LENGTH_SHORT).show()
         );
+
+
+        setupNavigationDrawer();
 
         // Setup Search Functionality
         searchBar.addTextChangedListener(new TextWatcher() {
