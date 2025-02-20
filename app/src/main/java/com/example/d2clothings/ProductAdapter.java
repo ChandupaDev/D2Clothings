@@ -1,5 +1,7 @@
 package com.example.d2clothings;
 
+import static android.app.ProgressDialog.show;
+
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,10 +64,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             Intent intent = new Intent(v.getContext(), ProductDetailActivity.class);
             intent.putExtra("id", product.getId());
             intent.putExtra("title", product.getName());
-            intent.putExtra("price", "Rs. " + product.getPrice());
+            intent.putExtra("price", String.valueOf(product.getPrice()));
             intent.putExtra("imageUrl", product.getImageUrl());
             intent.putExtra("description", product.getDescription());
             intent.putExtra("quantity", String.valueOf(product.getQty()));
+
 
             Log.d("ProductAdapter", "Sending qty: " + product.getQty());
             v.getContext().startActivity(intent);
