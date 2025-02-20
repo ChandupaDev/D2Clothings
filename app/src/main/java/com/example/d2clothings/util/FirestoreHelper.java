@@ -30,23 +30,12 @@ public class FirestoreHelper {
                             String imageUrl = doc.getString("imageUrl") != null ? doc.getString("imageUrl") : "";
 
                             // Fetch price safely
-                            Long priceLong = doc.getLong("price");
-                            Long price = (priceLong != null) ? priceLong : 0L;
+                            String price = doc.getString("price") != null ? doc.getString("price") : "";
 
-                            // **Declare qty before using**
-                            int qty = 0; // Default value
 
-                            if (doc.contains("qty")) {
-                                Object qtyObj = doc.get("qty"); // Get raw Firestore object
+                            String qty = doc.getString("qty") != null ? doc.getString("qty") : "";
 
-                                if (qtyObj instanceof Long) {
-                                    qty = ((Long) qtyObj).intValue(); // Convert Long to int
-                                } else if (qtyObj instanceof Double) {
-                                    qty = ((Double) qtyObj).intValue(); // Convert Double to int (if Firestore stored it as Double)
-                                } else {
-                                    qty = 0; // Default value if it's missing
-                                }
-                            } else {
+                             {
                                 Log.e("FirestoreHelper", "Field 'qty' not found in Firestore document: " + doc.getId());
                             }
 
@@ -60,7 +49,7 @@ public class FirestoreHelper {
 
                             // **Pass qty to Product**
                             Product product = new Product(
-                                    doc.getId(),
+                                    doc.getString("id"),
                                     title,
                                     description,
                                     price,

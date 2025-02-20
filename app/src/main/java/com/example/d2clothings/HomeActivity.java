@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.d2clothings.interfaces.FirestoreCallback;
 import com.example.d2clothings.util.FirestoreHelper;
@@ -24,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -35,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
+    private EditText searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +52,47 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize Views
         tvWelcome = findViewById(R.id.tvWelcome);
-        recyclerView = findViewById(R.id.recyclerView);
+        searchBar = findViewById(R.id.search_bar);
+        recyclerView = findViewById(R.id.latestProductsRecyclerView);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
-        // Setup Toolbar & Drawer
+
+        ImageButton btnDrawer = findViewById(R.id.btnDrawer);
+        ImageButton btnNotification = findViewById(R.id.btnNotification);
+
+        btnDrawer.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        btnNotification.setOnClickListener(v ->
+                Toast.makeText(HomeActivity.this, "Notifications clicked!", Toast.LENGTH_SHORT).show()
+        );
+
+
+        setupNavigationDrawer();
+
+        // Setup Search Functionality
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (productAdapter != null) {
+                    productAdapter.filter(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Setup Banner ViewPager2
+        ViewPager2 bannerViewPager = findViewById(R.id.bannerViewPager);
+        List<Integer> images = Arrays.asList(R.drawable.banner, R.drawable.banner, R.drawable.banner);
+        BannerAdapter adapter = new BannerAdapter(this, images);
+        bannerViewPager.setAdapter(adapter);
+
+        // Setup Toolbar & Navigation Drawer
         setupNavigationDrawer();
 
         // Setup RecyclerView
@@ -75,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
                 this, drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState(); // Ensure proper drawer toggle behavior
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -107,17 +150,25 @@ public class HomeActivity extends AppCompatActivity {
                 .whereEqualTo("email", userEmail)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        String fullName = document.getString("fullName");
-                        tvWelcome.setText("Welcome, " + fullName + "!");
-                        return;
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String fullName = document.getString("fullName");
+                            if (fullName != null && !fullName.isEmpty()) {
+                                tvWelcome.setText("Welcome, " + fullName + "!");
+                            } else {
+                                tvWelcome.setText("Welcome!");
+                            }
+                            break; // Stop after the first match
+                        }
+                    } else {
+                        tvWelcome.setText("Welcome, Guest!");
                     }
-                    Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Failed to load user data: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
     }
+
 
     private void fetchProducts() {
         new FirestoreHelper().fetchProducts(new FirestoreCallback() {
@@ -145,29 +196,13 @@ public class HomeActivity extends AppCompatActivity {
 
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("userEmail");
-        editor.apply();
-
-        Log.d("Logout", "User email after logout: " + sharedPreferences.getString("userEmail", "No email found"));
-
+        sharedPreferences.edit().remove("userEmail").apply();
         Toast.makeText(this, "Logged out successfully!", Toast.LENGTH_SHORT).show();
         redirectToSignIn();
     }
 
     private void redirectToSignIn() {
-        Intent intent = new Intent(HomeActivity.this, SigninActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(new Intent(HomeActivity.this, SigninActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 }

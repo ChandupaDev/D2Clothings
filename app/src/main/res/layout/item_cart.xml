@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <!-- Product Image -->
+        <ImageView
+            android:id="@+id/ivProduct"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/rounded_border"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tshirt" />
+
+        <!-- Product Details -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:id="@+id/tvProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvProductPriceQty"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="150.0 * 2"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/CartQty"
+                android:layout_width="76dp"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <!-- Quantity Selector -->
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -11,6 +11,6 @@
 
     <color name="backgroundLight">#F5F5F5</color>
     <color name="primary">#007AFF</color> <!-- iOS-like blue -->
-    <color name="secondary">#757575</color> <!-- Soft gray -->
+    <color name="secondary">#544F4F</color> <!-- Soft gray -->
 
 </resources>
