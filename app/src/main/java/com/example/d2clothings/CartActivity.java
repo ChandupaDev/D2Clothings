@@ -150,27 +150,54 @@ public class CartActivity extends AppCompatActivity {
 
 class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
-    int checkoutTotal;
+    int subtotalAmount;
+    private static final double DELIVERY_FEE = 150.0;
+    private static final double TAX_FEE = 50.0;
 
     private TextView checkoutTotalView;
+    private TextView subtotalTextView;
+    private TextView deliveryTextView;
+    private TextView taxTextView;
     Cursor cursor;
 
     public CartAdapter(Cursor cursor, TextView checkoutTotalView) {
         this.cursor = cursor;
         this.checkoutTotalView = checkoutTotalView;
-        this.checkoutTotal = 0; // Reset total
+        this.subtotalAmount = 0; // Reset subtotal
+
+        // Find all the required TextViews
+        View rootView = checkoutTotalView.getRootView();
+        this.subtotalTextView = rootView.findViewById(R.id.SubTot);
+        this.deliveryTextView = rootView.findViewById(R.id.DeliveryFee);
+        this.taxTextView = rootView.findViewById(R.id.Tax);
+
+        // Calculate initial subtotal by looping through all items
+        calculateSubtotal();
+
+        // Update all summary fields
+        updateSummaryFields();
+    }
+
+    private void calculateSubtotal() {
+        subtotalAmount = 0;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToPosition(-1);
+            while (cursor.moveToNext()) {
+                String qty = cursor.getString(cursor.getColumnIndexOrThrow("qty"));
+                String price = cursor.getString(cursor.getColumnIndexOrThrow("price"));
+                int itemTotal = Integer.parseInt(qty) * Integer.parseInt(price);
+                subtotalAmount += itemTotal;
+            }
+        }
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
-
+        // Existing code remains the same
         TextView ctitle;
         TextView cdetails;
         TextView cCheckoutTotal;
-
         TextView ctotal;
-
         ImageView cItemImage;
-
         String id;
 
         public CartViewHolder(@NonNull View itemView) {
@@ -186,6 +213,7 @@ class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Existing code remains the same
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_cart, parent, false);
         CartViewHolder cartViewHolder = new CartViewHolder(view);
@@ -201,12 +229,10 @@ class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
         String price = cursor.getString(cursor.getColumnIndexOrThrow("price"));
         String url = cursor.getString(cursor.getColumnIndexOrThrow("url"));
 
-
         holder.ctitle.setText(title);
         holder.id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
 
         int total = Integer.parseInt(qty) * Integer.parseInt(price);
-        checkoutTotal += total;
 
         Glide.with(holder.itemView.getContext())
                 .load(url)
@@ -215,21 +241,44 @@ class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
         holder.cdetails.setText("Rs. " + price + " x " + qty);
         holder.ctotal.setText("Rs. " + String.valueOf(total));
+    }
 
-        // Update the checkout total TextView
-        if (checkoutTotalView != null) {
-            checkoutTotalView.setText("Total: Rs. " + checkoutTotal);
+    private void updateSummaryFields() {
+        // Check if cart is empty
+        boolean isCartEmpty = (cursor == null || cursor.getCount() == 0);
+
+        // Update subtotal
+        if (subtotalTextView != null) {
+            subtotalTextView.setText(String.format("Rs. %.2f", (double)subtotalAmount));
         }
 
+        // Update delivery fee - set to 0 if cart is empty
+        if (deliveryTextView != null) {
+            double deliveryAmount = isCartEmpty ? 0 : DELIVERY_FEE;
+            deliveryTextView.setText(String.format("Rs. %.2f", deliveryAmount));
+        }
+
+        // Update tax - set to 0 if cart is empty
+        if (taxTextView != null) {
+            double taxAmount = isCartEmpty ? 0 : TAX_FEE;
+            taxTextView.setText(String.format("Rs. %.2f", taxAmount));
+        }
+
+        // Calculate the total
+        double totalAmount = subtotalAmount;
+        if (!isCartEmpty) {
+            totalAmount += DELIVERY_FEE + TAX_FEE;
+        }
+
+        // Update the total checkout amount
+        if (checkoutTotalView != null) {
+            checkoutTotalView.setText(String.format("Rs. %.2f", totalAmount));
+        }
     }
 
     @Override
     public int getItemCount() {
         return cursor.getCount();
-    }
-
-    public void removeItem(int position) {
-        notifyItemRemoved(position);
     }
 
     public void updateCursor(Cursor newCursor, TextView checkoutTotalView) {
@@ -238,7 +287,13 @@ class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
         }
         cursor = newCursor;
         this.checkoutTotalView = checkoutTotalView;
-        this.checkoutTotal = 0; // Reset total
+
+        // Recalculate subtotal with the new cursor
+        calculateSubtotal();
+
+        // Update all summary fields with the new data
+        updateSummaryFields();
+
         notifyDataSetChanged();
     }
 }
