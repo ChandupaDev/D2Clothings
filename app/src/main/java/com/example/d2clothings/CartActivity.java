@@ -3,6 +3,8 @@ package com.example.d2clothings;
 import static android.app.PendingIntent.getActivity;
 import static java.security.AccessController.getContext;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -27,7 +29,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.d2clothings.db.SQLiteHelper;
 
+import lk.payhere.androidsdk.PHConfigs;
+import lk.payhere.androidsdk.PHConstants;
+import lk.payhere.androidsdk.PHMainActivity;
+import lk.payhere.androidsdk.model.InitRequest;
+import lk.payhere.androidsdk.model.Item;
+
 public class CartActivity extends AppCompatActivity {
+    private static final int PAYHERE_REQUEST = 11001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,7 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         // Find the root layout (ConstraintLayout in your XML)
-        View rootView = findViewById(R.id.root_layout);  // Change 'root_layout' to the correct ID
+        View rootView = findViewById(R.id.root_layout);
 
         if (rootView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
@@ -45,6 +54,129 @@ public class CartActivity extends AppCompatActivity {
                 return insets;
             });
         }
+
+        // Setup checkout button
+        setupCheckoutButton();
+    }
+
+    private void setupCheckoutButton() {
+        // Find the checkout button
+        View checkoutButton = findViewById(R.id.btnCheckout);
+        if (checkoutButton != null) {
+            checkoutButton.setOnClickListener(v -> {
+                // Get current cart total
+                TextView totalView = findViewById(R.id.TotalCheckout);
+                String totalText = totalView.getText().toString().replace("Rs. ", "");
+
+                try {
+                    double totalAmount = Double.parseDouble(totalText);
+                    if (totalAmount > 0) {
+                        initiatePaymentGateway(totalAmount);
+                    } else {
+                        Toast.makeText(this, "Your cart is empty", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Invalid total amount", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void initiatePaymentGateway(double amount) {
+        // Create a unique order ID based on timestamp
+        String orderId = "ORD" + System.currentTimeMillis();
+
+        InitRequest req = new InitRequest();
+        req.setMerchantId("1227564");       // Merchant ID
+        req.setCurrency("LKR");             // Currency code LKR/USD/GBP/EUR/AUD
+        req.setAmount(amount);              // Final Amount to be charged
+        req.setOrderId(orderId);            // Unique Reference ID
+        req.setItemsDescription("D2 Clothing Order");  // Item description title
+
+        // Set customer information (You may want to get this from user input or stored profile)
+        req.getCustomer().setFirstName("Chandupa");
+        req.getCustomer().setLastName("");
+        req.getCustomer().setEmail("Chandupajayalath20@gmail.com");
+        req.getCustomer().setPhone("");
+        req.getCustomer().getAddress().setAddress("20,lk,Sri Lanka");
+        req.getCustomer().getAddress().setCity("Anuradhapura");
+        req.getCustomer().getAddress().setCountry("Sri Lanka");
+
+        // Add items from cart to payment request
+        addCartItemsToRequest(req);
+
+        Intent intent = new Intent(this, PHMainActivity.class);
+        intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req);
+        PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL);
+        startActivityForResult(intent, PAYHERE_REQUEST);
+    }
+
+    private void addCartItemsToRequest(InitRequest req) {
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                CartActivity.this,
+                "cart.db",
+                null,
+                1);
+
+        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(
+                "cart_item",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "id DESC"
+        );
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToPosition(-1);
+            while (cursor.moveToNext()) {
+                String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+                String qty = cursor.getString(cursor.getColumnIndexOrThrow("qty"));
+                String price = cursor.getString(cursor.getColumnIndexOrThrow("price"));
+
+                int quantity = Integer.parseInt(qty);
+                double itemPrice = Double.parseDouble(price);
+
+                req.getItems().add(new Item(null, title, quantity, itemPrice));
+            }
+            cursor.close();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PAYHERE_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Payment successful
+                String status = data.getStringExtra(PHConstants.INTENT_EXTRA_RESULT);
+                if (status != null && !status.equals("FAILED") && !status.equals("CANCELLED")) {
+                    // Payment successful
+                    clearCart();
+                    Toast.makeText(this, "Payment successful!", Toast.LENGTH_LONG).show();
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // Payment canceled
+                Toast.makeText(this, "Payment canceled", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void clearCart() {
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(
+                CartActivity.this,
+                "cart.db",
+                null,
+                1);
+
+        SQLiteDatabase sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+        sqLiteDatabase.delete("cart_item", null, null);
+
+        // Refresh the cart UI
+        recreate();
     }
 
     @Override
@@ -80,7 +212,6 @@ public class CartActivity extends AppCompatActivity {
                         null,
                         1);
 
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -109,7 +240,6 @@ public class CartActivity extends AppCompatActivity {
                     }
                 }).start();
             }
-
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView1);
@@ -143,7 +273,6 @@ public class CartActivity extends AppCompatActivity {
                 });
             }
         }).start();
-
     }
 }
 

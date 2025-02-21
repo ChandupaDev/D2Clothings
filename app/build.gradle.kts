@@ -34,6 +34,12 @@ android {
 
 dependencies {
 
+    implementation ("com.google.firebase:firebase-firestore:24.9.0")
+    implementation ("com.google.firebase:firebase-core:21.1.1")
+
+    implementation("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
+    implementation("com.google.code.gson:gson:2.8.0")
+
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
