@@ -30,6 +30,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        viewBinding = true;
+    }
 }
 
 dependencies {
@@ -39,6 +43,8 @@ dependencies {
 
     implementation("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
     implementation("com.google.code.gson:gson:2.8.0")
+
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")

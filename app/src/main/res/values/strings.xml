@@ -3,6 +3,10 @@
     <string name="drawer_open">Open Navigation</string>
     <string name="drawer_close">Close Navigation</string>
     <string name="admin">Admin login</string>
+    <string name="order_text1">Order</string>
+    <string name="order_text2">Total</string>
+    <string name="order_text3">Message</string>
+    <string name="order_text4">Track</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

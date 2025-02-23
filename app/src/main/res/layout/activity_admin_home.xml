@@ -18,69 +18,77 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <!-- Main content container -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <!-- Dashboard content in NestedScrollView -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/dashboard_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-            <!-- Add your dashboard content here -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome Admin"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <!-- Example dashboard items -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:text="Welcome Admin"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Quick Actions"
-                        android:textStyle="bold"
-                        android:textSize="18sp"/>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
 
-                    <Button
-                        android:id="@+id/btnManageProducts"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Manage Products"
-                        android:layout_marginTop="8dp"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                    <Button
-                        android:id="@+id/btnManageOrders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Manage Orders"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Quick Actions"
+                            android:textStyle="bold"
+                            android:textSize="18sp"/>
 
-                    <Button
-                        android:id="@+id/btnManageUsers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Manage Users" />
+                        <Button
+                            android:id="@+id/btnManageProducts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Manage Products"
+                            android:layout_marginTop="8dp"/>
 
-                </LinearLayout>
+                        <Button
+                            android:id="@+id/btnManageOrders"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Manage Orders"/>
 
-            </com.google.android.material.card.MaterialCardView>
+                        <Button
+                            android:id="@+id/btnDeleteProducts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Delete Products" />
 
-        </LinearLayout>
+                    </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
 
 </LinearLayout>
