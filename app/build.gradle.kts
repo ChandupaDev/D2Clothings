@@ -30,10 +30,25 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        viewBinding = true;
+    }
 }
 
 dependencies {
 
+    implementation ("com.google.firebase:firebase-firestore:24.9.0")
+    implementation ("com.google.firebase:firebase-core:21.1.1")
+
+    implementation("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
+    implementation("com.google.code.gson:gson:2.8.0")
+
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+
+    implementation ("com.google.android.material:material:1.11.0")
+
+    implementation ("com.google.android.material:material:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
@@ -43,7 +58,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation ("com.google.firebase:firebase-storage:20.3.0")
-    implementation ("com.google.android.material:material:1.9.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
     implementation ("androidx.cardview:cardview:1.0.0")

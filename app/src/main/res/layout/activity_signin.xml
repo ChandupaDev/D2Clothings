@@ -111,14 +111,26 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSignUp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="New to D2Clothings? Create Account"
-                    android:textAllCaps="false"
-                    android:textSize="14sp"
-                    android:layout_marginTop="8dp"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:textColor="#ffa500"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Create New Account"
+                    android:textAllCaps="false"
+                    android:textColor="#ffa500"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAdminLogin"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Admin Login"
+                    android:textAllCaps="false"
+                    android:textColor="#ff0000"
+                    android:textSize="14sp" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

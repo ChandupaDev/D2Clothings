@@ -127,6 +127,8 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 } else if (id == R.id.nav_cart) {
                     startActivity(new Intent(HomeActivity.this, CartActivity.class));
+                }else if (id == R.id.nav_trackoders) {
+                    startActivity(new Intent(HomeActivity.this, OdersActivity.class));
                 } else if (id == R.id.nav_logout) {
                     logout();
                 }
