@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name=".ShopActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".OdersActivity"
             android:exported="false" />
@@ -67,7 +67,7 @@
             android:exported="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyBFvLnCwuuVPV6cYi2KkpHzDV5hG10qTZ8" />
     </application>
 
 </manifest>

@@ -28,35 +28,33 @@ public class FirestoreHelper {
 
                         try {
                             // Fetch data safely
+                            String id = doc.getId(); // Use document ID if 'id' field is missing
                             String title = doc.getString("name") != null ? doc.getString("name") : "No Title";
                             String description = doc.getString("description") != null ? doc.getString("description") : "No Description";
                             String imageUrl = doc.getString("imageUrl") != null ? doc.getString("imageUrl") : "";
+                            String price = doc.getString("price") != null ? doc.getString("price") : "0";
 
-                            // Fetch price safely
-                            String price = doc.getString("price") != null ? doc.getString("price") : "";
-
-
-                            String qty = doc.getString("qty") != null ? doc.getString("qty") : "";
-
-                             {
-                                Log.e("FirestoreHelper", "Field 'qty' not found in Firestore document: " + doc.getId());
+                            // Check if qty field exists and handle its absence
+                            String qty = "0";
+                            if (doc.contains("qty")) {
+                                qty = doc.getString("qty") != null ? doc.getString("qty") : "0";
+                            } else {
+                                Log.w("FirestoreHelper", "Field 'qty' not found in Firestore document: " + doc.getId());
+                                // Use default value of "0"
                             }
-
-
-
 
                             // Debugging Logs
                             Log.d("FirestoreHelper", "Title: " + title);
                             Log.d("FirestoreHelper", "Price: " + price);
                             Log.d("FirestoreHelper", "Quantity: " + qty);
 
-                            // **Pass qty to Product**
+                            // Create product with safe values
                             Product product = new Product(
-                                    doc.getString("id"),
+                                    id,
                                     title,
                                     description,
                                     price,
-                                    qty, // ✅ Now qty is defined
+                                    qty,
                                     imageUrl
                             );
                             productList.add(product);
@@ -67,7 +65,10 @@ public class FirestoreHelper {
                     Log.d("FirestoreHelper", "Total Products Fetched: " + productList.size());
                     callback.onSuccess(productList);
                 })
-                .addOnFailureListener(e -> Log.e("FirestoreHelper", "Failed to fetch products", e));
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreHelper", "Failed to fetch products", e);
+                    callback.onFailure(e);
+                });
     }
 
     public void deleteProduct(String productId, FirestoreOperationCallback<Void> callback) {
