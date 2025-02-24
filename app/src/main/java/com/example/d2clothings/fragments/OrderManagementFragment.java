@@ -59,7 +59,7 @@ public class OrderManagementFragment extends Fragment {
         firestore = FirebaseFirestore.getInstance();
 
         // Set up RecyclerView for orders
-        recyclerView = binding.adminSingleOrderItemRecyclerView;
+        recyclerView = binding.AdminOrderManagementRV;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         orders = new ArrayList<>();
         adapter = new OrderAdapter(firestore, getContext(), orders);
@@ -135,7 +135,7 @@ class OrderAdapter extends RecyclerView.Adapter<com.example.d2clothings.fragment
     @Override
     public OrderAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // ✅ Use fragment_order_management.xml for the OrderAdapter
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_order_management, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.admin_order, parent, false);
         return new OrderViewHolder(view);
     }
 
@@ -259,15 +259,15 @@ class OrderAdapter extends RecyclerView.Adapter<com.example.d2clothings.fragment
                         String pid = document.getString("pid");
 
                         if (qty != null && pid != null) {
-                            firestore.collection("product")
-                                    .whereEqualTo("pid", pid)
+                            firestore.collection("products")
+                                    .whereEqualTo("id", pid)
                                     .get()
                                     .addOnSuccessListener(productSnapshots -> {
                                         if (!productSnapshots.isEmpty()) {
                                             DocumentSnapshot productDoc = productSnapshots.getDocuments().get(0);
-                                            String pname = productDoc.getString("ptitle");
+                                            String pname = productDoc.getString("name");
                                             String price = productDoc.getString("price");
-                                            String url = productDoc.getString("url");
+                                            String url = productDoc.getString("imageUrl");
 
                                             if (pname != null && price != null) {
                                                 int totalPrice = Integer.parseInt(qty) * Integer.parseInt(price);
@@ -360,6 +360,8 @@ class OrderItemAdapter extends RecyclerView.Adapter<com.example.d2clothings.frag
                 .load(order_item.getUrl())
                 .apply(new RequestOptions().timeout(60000))
                 .into(holder.adminSingleOrderImg);
+
+        Log.d("image",String.valueOf(order_item.getUrl()));
     }
 
     @Override

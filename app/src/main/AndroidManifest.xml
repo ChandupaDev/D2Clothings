@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,18 @@
         android:theme="@style/Theme.MCommerce"
         tools:replace="android:label"
         tools:targetApi="31">
+        <activity
+            android:name=".SigninActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ShopActivity"
+            android:exported="false" />
         <activity
             android:name=".OdersActivity"
             android:exported="false" />
@@ -33,15 +47,6 @@
             android:name=".CartActivity"
             android:exported="false" />
         <activity
-            android:name=".SigninActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".HomeActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
@@ -57,6 +62,12 @@
         <activity
             android:name=".ProductDetailActivity"
             android:exported="true" />
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY_HERE" />
     </application>
 
 </manifest>
