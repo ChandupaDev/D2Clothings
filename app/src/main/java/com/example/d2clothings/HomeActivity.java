@@ -68,8 +68,6 @@ public class HomeActivity extends AppCompatActivity {
         );
 
 
-        setupNavigationDrawer();
-
         // Setup Search Functionality
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,7 +121,9 @@ public class HomeActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             try {
-                if (id == R.id.nav_profile) {
+                if (id == R.id.nav_shop){
+                    startActivity(new Intent(HomeActivity.this, ShopActivity.class));
+                } else if(id == R.id.nav_profile) {
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 } else if (id == R.id.nav_cart) {
                     startActivity(new Intent(HomeActivity.this, CartActivity.class));
