@@ -47,8 +47,6 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        recyclerProducts = findViewById(R.id.recyclerProducts);
-
         // Initialize UI components
         initViews();
 
@@ -74,11 +72,7 @@ public class ShopActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         tvAllProducts = findViewById(R.id.tvAllProducts);
 
-        // Since we don't have categories in the database, hide the chip group or use it differently
-        // Option 1: Hide it completely
-        // chipGroupCategories.setVisibility(View.GONE);
-
-        // Option 2: Use it for price ranges instead
+        // Use chip group for price ranges
         updateChipsForPriceRanges();
     }
 
@@ -104,13 +98,12 @@ public class ShopActivity extends AppCompatActivity {
             chipGroupCategories.addView(chip);
         }
     }
+
     private void setupRecyclerView() {
         recyclerProducts.setLayoutManager(new GridLayoutManager(this, 2)); // 2 columns grid
         ShAdapter = new ShAdapter(new ArrayList<>()); // Initialize with an empty list
         recyclerProducts.setAdapter(ShAdapter);
     }
-
-
 
     private void loadProducts() {
         showLoading(true);
@@ -121,7 +114,10 @@ public class ShopActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     showLoading(false);
                     if (products != null && !products.isEmpty()) {
-                        updateProductList(products);
+                        // Store the original list for filtering
+                        originalProductList = new ArrayList<>(products);
+                        productList = new ArrayList<>(products);
+                        updateProductList(productList);
                     } else {
                         showEmptyView(true);
                     }
@@ -140,14 +136,19 @@ public class ShopActivity extends AppCompatActivity {
         });
     }
 
-
     private void updateProductList(List<Product> products) {
-        ShAdapter = new ShAdapter(products);
-        recyclerProducts.setAdapter(ShAdapter);
-        ShAdapter.notifyDataSetChanged();
-        showEmptyView(products.isEmpty());
-    }
+        if (ShAdapter == null) {
+            ShAdapter = new ShAdapter(products);
+            recyclerProducts.setAdapter(ShAdapter);
+        } else {
+            ShAdapter.updateData(products);
+        }
 
+        showEmptyView(products.isEmpty());
+
+        // Update the header with count
+        updateProductHeaderText(getSelectedPriceRange());
+    }
 
     private void setupListeners() {
         // Search functionality
@@ -187,9 +188,6 @@ public class ShopActivity extends AppCompatActivity {
             }
 
             filterProducts(searchText, priceRange);
-
-            // Update header text
-            updateProductHeaderText(priceRange);
         });
     }
 
@@ -205,23 +203,19 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     private void filterProducts(String searchText, String priceRange) {
-        List<Product> filteredList = new ArrayList<>();
+        // Use the adapter's filter method directly
+        ShAdapter.filter(searchText, priceRange);
 
-        for (Product product : originalProductList) {
-            boolean matchesSearch = searchText.isEmpty() ||
-                    product.getName().toLowerCase().contains(searchText.toLowerCase()) ||
-                    product.getDescription().toLowerCase().contains(searchText.toLowerCase());
-
-            boolean matchesPriceRange = matchesPriceRange(product, priceRange);
-
-            if (matchesSearch && matchesPriceRange) {
-                filteredList.add(product);
-            }
+        // Update the header count using the filtered count
+        int filteredCount = ShAdapter.getItemCount();
+        if (priceRange.equals("All")) {
+            tvAllProducts.setText("All Products (" + filteredCount + ")");
+        } else {
+            tvAllProducts.setText(priceRange + " (" + filteredCount + ")");
         }
 
-        updateProductList(filteredList);
-        ShAdapter.notifyDataSetChanged();
-        showEmptyView(filteredList.isEmpty());
+        // Show empty view if no results
+        showEmptyView(filteredCount == 0);
     }
 
     private boolean matchesPriceRange(Product product, String priceRange) {
@@ -250,15 +244,14 @@ public class ShopActivity extends AppCompatActivity {
         }
     }
 
-
     private void updateProductHeaderText(String priceRange) {
+        int count = ShAdapter != null ? ShAdapter.getItemCount() : 0;
         if (priceRange.equals("All")) {
-            tvAllProducts.setText("All Products (" + productList.size() + ")");
+            tvAllProducts.setText("All Products (" + count + ")");
         } else {
-            tvAllProducts.setText(priceRange + " (" + productList.size() + ")");
+            tvAllProducts.setText(priceRange + " (" + count + ")");
         }
     }
-
 
     private void showLoading(boolean isLoading) {
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
