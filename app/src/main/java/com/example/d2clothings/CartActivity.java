@@ -55,6 +55,8 @@ public class CartActivity extends AppCompatActivity {
             });
         }
 
+        findViewById(R.id.ivBack1).setOnClickListener(v -> finish());
+
         // Setup checkout button
         setupCheckoutButton();
     }
