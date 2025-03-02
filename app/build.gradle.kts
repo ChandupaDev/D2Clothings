@@ -40,14 +40,13 @@ dependencies {
 
     implementation ("com.google.firebase:firebase-firestore:24.9.0")
     implementation ("com.google.firebase:firebase-core:21.1.1")
-
     implementation("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
     implementation("com.google.code.gson:gson:2.8.0")
-
     implementation("com.google.android.gms:play-services-maps:19.0.0")
 
-    implementation ("com.google.android.material:material:1.11.0")
+    implementation ("com.android.volley:volley:1.2.1")
 
+    implementation ("com.google.android.material:material:1.11.0")
     implementation ("com.google.android.material:material:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
