@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
+public class ShAdapter extends RecyclerView.Adapter<ShAdapter.ProductViewHolder> {
 
     private List<Product> productList;
     private List<Product> filteredList; // For search functionality
@@ -28,17 +28,17 @@ public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHo
 
     @NonNull
     @Override
-    public ProductAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product, parent, false);
-        return new ProductAdapter.ProductViewHolder(view);
+        return new ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductAdapter.ProductViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = filteredList.get(position);
 
         // Debugging Logs
-        Log.d("ProductAdapter", "Binding Product: " + product.getName() + " | Qty: " + product.getQty());
+        Log.d("ShAdapter", "Binding Product: " + product.getName() + " | Qty: " + product.getQty());
 
         // Set product details
         holder.tvTitle.setText(product.getName());
@@ -48,7 +48,7 @@ public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHo
         if (holder.tvQuantity != null) {
             holder.tvQuantity.setText("Qty: " + product.getQty());
         } else {
-            Log.e("ProductAdapter", "tvQuantity is null! Check item_product.xml");
+            Log.e("ShAdapter", "tvQuantity is null! Check item_product.xml");
         }
 
         // Load product image efficiently
@@ -67,8 +67,7 @@ public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHo
             intent.putExtra("description", product.getDescription());
             intent.putExtra("quantity", String.valueOf(product.getQty()));
 
-
-            Log.d("ProductAdapter", "Sending qty: " + product.getQty());
+            Log.d("ShAdapter", "Sending qty: " + product.getQty());
             v.getContext().startActivity(intent);
         });
     }
@@ -76,6 +75,14 @@ public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHo
     @Override
     public int getItemCount() {
         return filteredList.size();
+    }
+
+    // Method to update data
+    public void updateData(List<Product> newProducts) {
+        this.productList = new ArrayList<>(newProducts);
+        this.filteredList.clear();
+        this.filteredList.addAll(newProducts);
+        notifyDataSetChanged();
     }
 
     // ViewHolder class
@@ -105,5 +112,48 @@ public class ShAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHo
             }
         }
         notifyDataSetChanged(); // Refresh the adapter
+    }
+
+    // Add a method to filter by price range as well
+    public void filter(String query, String priceRange) {
+        filteredList.clear();
+
+        for (Product product : productList) {
+            boolean matchesQuery = query.isEmpty() ||
+                    product.getName().toLowerCase().contains(query.toLowerCase()) ||
+                    product.getDescription().toLowerCase().contains(query.toLowerCase());
+
+            boolean matchesPriceRange = true; // Default to true if "All" is selected
+
+            if (!priceRange.equals("All")) {
+                try {
+                    double price = Double.parseDouble(product.getPrice());
+
+                    switch (priceRange) {
+                        case "Under Rs.500":
+                            matchesPriceRange = price < 500;
+                            break;
+                        case "Rs.500-Rs.1000":
+                            matchesPriceRange = price >= 500 && price <= 1000;
+                            break;
+                        case "Rs.1000-Rs.2000":
+                            matchesPriceRange = price > 1000 && price <= 2000;
+                            break;
+                        case "Above Rs.2000":
+                            matchesPriceRange = price > 2000;
+                            break;
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("ShAdapter", "Error parsing price: " + product.getPrice(), e);
+                    matchesPriceRange = true; // Include if price can't be parsed
+                }
+            }
+
+            if (matchesQuery && matchesPriceRange) {
+                filteredList.add(product);
+            }
+        }
+
+        notifyDataSetChanged();
     }
 }
